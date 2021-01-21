@@ -1,4 +1,5 @@
-///practice trial for additions to change optio
+
+
 
 
 var aggregate;
@@ -11,22 +12,25 @@ function init(data){
   var originsSet = new Set(aggregate.map(element =>element.Origin));
   var origins=Array.from(originsSet).sort((a,b)=>a.localeCompare(b));
   var selDataset= document.getElementById("selDataset");
+  selDataset.addEventListener("change",optionChanged);
   var html="";
   origins.forEach(origin => {
     html+=`<option>${origin}</option>`;
   });
   selDataset.innerHTML = html;
 }
+//optionchanged gets called from the html; attached to attribute on html
+function optionChanged(event){
+  var origin =event.target.value;
 
-function optionChanged(origin){
   console.log(origin);
   //filter the aggregate data and get airlines at that origin; filter and sort
-  var depthour= aggregate.filter (element => element.Origin === origin).sort((a,b)=> a.depthour.localeCompare(b.depthour));
-  console.log(Airline);
+  var airlines= aggregate.filter (element => element.Origin === origin).sort((a,b)=> a.Airline.localeCompare(b.Airline));
+  console.log(airlines);
 
 
-    var xAxis = depthour.map(element => element.depthour);
-    var yAxis = depthour.map(element => +element.Delay);
+    var xAxis = airlines.map(element => element.Airline);
+    var yAxis = airlines.map(element => +element["Delay (min)"]);
     //var hovertext =airlines.map(element => element.Airline);
 
     console.log(xAxis,yAxis);  
@@ -47,8 +51,8 @@ function optionChanged(origin){
     Plotly.newPlot("bar", plotlyData);
 
     
-  function getPlot(data){
-    var xAxis = data.map(element => element.depthour);
+  /*function getPlot(data){
+    var xAxis = data.map(element => element.Dep_Time);
     var yAxis = data.map(element => +element.Delay);
       console.log(xAxis,yAxis);  
       var plotlyData = [
@@ -58,7 +62,7 @@ function optionChanged(origin){
       colorscale: "YlGnBu",
       type: "scatter",}];
       Plotly.newPlot("scatter", plotlyData);
-  }
+  }*/
   
       
 
@@ -88,7 +92,7 @@ function optionChanged(origin){
 
 function getBar(data){
   var xAxis = data.map(element => element.Origin);
-  var yAxis = data.map(element => +element.Delay);
+  var yAxis = data.map(element => +element["Delay (min)"]);
   var hovertext=data.map(element => element.Airline);
 
     console.log(xAxis,yAxis);  
@@ -111,7 +115,7 @@ function getBar(data){
 }
 
   // read the data 
-  d3.csv("flight_time.csv").then((data)=> {
+  d3.csv("avdelay.csv").then((data)=> {
     console.log(data);
    
     init(data);
@@ -119,13 +123,14 @@ function getBar(data){
 
   });
 
-  /*d3.csv("ORD2.csv").then((data)=> {
+  d3.csv("ORD2.csv").then((data)=> {
     console.log(data);
 
 
   getPlot(data);
 
 
-  });*/
+  });
+
     
 
